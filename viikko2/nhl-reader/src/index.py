@@ -3,6 +3,30 @@ from rich.table import Table
 
 from player import PlayerReader, PlayerStats
 
+def make_table(season):
+    table = Table(
+        title=f"{season} scoring leaders",
+        header_style="bold white",
+        border_style="bright_blue",
+    )
+    table.add_column("Player", style="cyan", no_wrap=True)
+    table.add_column("Team", style="magenta")
+    table.add_column("Goals", justify="right", style="green")
+    table.add_column("Assists", justify="right", style="green")
+    table.add_column("Points", justify="right", style="bold green")
+
+    return table
+
+def update_table(table, players):
+    for player in players:
+        table.add_row(
+            player.name,
+            player.team,
+            str(player.goals),
+            str(player.assists),
+            str(player.goals + player.assists),
+        )
+    return table
 
 def main():
     season = input("season (eg. 2018-19): ")
@@ -17,25 +41,9 @@ def main():
             break
         players = stats.top_scorers_by_nationality(nationality)
 
-        table = Table(
-            title=f"{season} scoring leaders",
-            header_style="bold white",
-            border_style="bright_blue",
-        )
-        table.add_column("Player", style="cyan", no_wrap=True)
-        table.add_column("Team", style="magenta")
-        table.add_column("Goals", justify="right", style="green")
-        table.add_column("Assists", justify="right", style="green")
-        table.add_column("Points", justify="right", style="bold green")
+        table = make_table(season)
 
-        for player in players:
-            table.add_row(
-                player.name,
-                player.team,
-                str(player.goals),
-                str(player.assists),
-                str(player.goals + player.assists),
-            )
+        table = update_table(table, players)
 
         Console().print(table)
 
