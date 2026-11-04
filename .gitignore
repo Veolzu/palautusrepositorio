@@ -8,7 +8,7 @@ log.html
 report.html
 browser/
 playwright-log.txt
-
+opencode.json
 
 
 # Byte-compiled / optimized / DLL files
