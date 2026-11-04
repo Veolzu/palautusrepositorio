@@ -36,13 +36,20 @@ def main():
     stats = PlayerStats(reader)
 
     while True:
-        nationality = input("nationality (e.g FIN): ")
-        if nationality == "":
+        mode = input("Search by (n)ationality, (t)eam or empty to quit: ")
+        if mode == "":
             break
-        players = stats.top_scorers_by_nationality(nationality)
+        if mode.lower() == "n":
+            nationality = input("nationality (e.g FIN): ")
+            players = stats.top_scorers_by_nationality(nationality)
+        elif mode.lower() == "t":
+            team = input("team (e.g BOS): ")
+            players = stats.top_players_by_team(team)
+        else:
+            print("Unknown mode, choose 'n' or 't'.")
+            continue
 
         table = make_table(season)
-
         table = update_table(table, players)
 
         Console().print(table)

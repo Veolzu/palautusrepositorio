@@ -39,7 +39,6 @@ class PlayerReader:
 class PlayerStats:
     def __init__(self, reader):
         self.players = reader.get_players()
-
     def dummy(self):
         pass
 
@@ -49,3 +48,17 @@ class PlayerStats:
         players = sorted(players, key= lambda player: (player.goals + player.assists), reverse=True)
 
         return players
+    def top_players_by_team(self, team):
+        """Palauttaa listan joukkueen pelaajista pisteiden (goals + assists) mukaan laskevassa järjestyksessä."""
+        Console().print(Text("Players from team " + team + ":", style="bold cyan"))
+        players = [player for player in self.players if player.team == team]
+        players = sorted(players, key=lambda player: (player.goals + player.assists), reverse=True)
+
+        return players
+    def top_goal_scorers(self, how_many):
+        """Palauttaa how_many eniten maaleja tehnyttä pelaajaa maalimäärän mukaan laskevassa järjestyksessä"""
+        Console().print(Text(f"Top {how_many} goal scorers:", style="bold cyan"))
+
+        players = sorted(self.players, key=lambda player: player.goals, reverse=True)
+
+        return players[:how_many]
