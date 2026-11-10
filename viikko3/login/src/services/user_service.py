@@ -40,9 +40,6 @@ class UserService:
         if not username or not password:
             raise UserInputError("Username and password are required")
 
-        if password != password_confirmation:
-            raise Exception("Password and its confirmation do not match")
-
         if len(username) < 3:
             raise UserInputError("Username must be at least 3 characters long")
         # toteuta loput tarkastukset tänne ja nosta virhe virhetilanteissa
