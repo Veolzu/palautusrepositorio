@@ -29,6 +29,14 @@ Register With Password Containing Only Lowercase Letters
 Register With Password Containing Only Mixed-Case Letters
     Register User With Password  KalleKalle
     Registering Should Fail With Message  Password must contain at least one non-letter character
+
+Register With Matching Password Confirmation
+    Register User With Password And Confirmation  matching1  matching1
+    Registering Should Succeed
+
+Register With Different Password Confirmation
+    Register User With Password And Confirmation  matching1  different1
+    Registering Should Fail With Message  Password and its confirmation do not match
     
 
 Register With Too Short Username And Valid Password
@@ -62,9 +70,13 @@ Registering Should Fail With Message
 
 Register User With Password
     [Arguments]  ${password}
+    Register User With Password And Confirmation  ${password}  ${password}
+
+Register User With Password And Confirmation
+    [Arguments]  ${password}  ${password_confirmation}
     Set Username  newuser
     Set Password  ${password}
-    Set Password confirmation  ${password}
+    Set Password confirmation  ${password_confirmation}
     Click  button >> text=Register
 
 Set Username
