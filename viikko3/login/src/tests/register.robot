@@ -13,6 +13,22 @@ Register With Valid Username And Password
     Set Password confirmation  Veeti5000
     Click  button >> text=Register
     Registering Should Succeed
+
+Register With Password Containing Digits
+    Register User With Password  kalle123
+    Registering Should Succeed
+
+Register With Password Containing Symbols
+    Register User With Password  kalle#abc
+    Registering Should Succeed
+
+Register With Password Containing Only Lowercase Letters
+    Register User With Password  kallekalle
+    Registering Should Fail With Message  Password must contain at least one non-letter character
+
+Register With Password Containing Only Mixed-Case Letters
+    Register User With Password  KalleKalle
+    Registering Should Fail With Message  Password must contain at least one non-letter character
     
 
 Register With Too Short Username And Valid Password
@@ -43,6 +59,13 @@ Registering Should Fail With Message
     [Arguments]  ${message}
     Register Page Should Be Open
     Get Text  body  *=  ${message}
+
+Register User With Password
+    [Arguments]  ${password}
+    Set Username  newuser
+    Set Password  ${password}
+    Set Password confirmation  ${password}
+    Click  button >> text=Register
 
 Set Username
     [Arguments]  ${username}

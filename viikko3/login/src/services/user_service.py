@@ -49,4 +49,10 @@ class UserService:
 
         if len(password) < 8:
              raise UserInputError("Password must be at least 8 characters long")
+
+        if all(character.isalpha() for character in password):
+            raise UserInputError(
+                "Password must contain at least one non-letter character"
+            )
+
 user_service = UserService()
