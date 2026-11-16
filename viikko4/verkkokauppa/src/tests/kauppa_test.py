@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import Mock, ANY
+from unittest.mock import Mock, ANY, call
 from kauppa import Kauppa
 from tuote import Tuote
 
@@ -78,3 +78,49 @@ class TestKauppa(unittest.TestCase):
 
         # varmistetaan, että metodia tilisiirto on kutsuttu
         self.pankki_mock.tilisiirto.assert_called_with("pekka", 43, "12345", ANY, 5)
+
+    def test_asionnin_aloitus_nollaa_ostoskorin(self):
+        self.viitegeneraattori_mock.uusi.return_value = 43
+        self.kauppa.aloita_asiointi()
+        self.kauppa.lisaa_koriin(1)
+
+        self.kauppa.aloita_asiointi()
+        self.kauppa.lisaa_koriin(2)
+        self.kauppa.tilimaksu("pekka", "12345")
+        self.pankki_mock.tilisiirto.assert_called_with("pekka", 43, "12345", ANY, 2)
+
+
+    def test_kauppa_pyytaa_uudet_viitteet(self):
+        self.viitegeneraattori_mock.uusi.side_effect = [1, 2, 3]
+
+        self.kauppa.aloita_asiointi()
+        self.kauppa.lisaa_koriin(2)
+        self.kauppa.tilimaksu("pekka", "12345")
+
+        self.kauppa.aloita_asiointi()
+        self.kauppa.lisaa_koriin(1)
+        self.kauppa.tilimaksu("pekka", "12345")
+
+        self.kauppa.aloita_asiointi()
+        self.kauppa.lisaa_koriin(1)
+        self.kauppa.tilimaksu("pekka", "12345")
+
+        # varmistetaan, että maksuissa on käytetty viitteitä järjestyksessä 1, 2 ja 3
+        self.assertEqual(
+            self.pankki_mock.tilisiirto.call_args_list,
+            [
+                call(ANY, 1, ANY, ANY, ANY),
+                call(ANY, 2, ANY, ANY, ANY),
+                call(ANY, 3, ANY, ANY, ANY),
+            ],
+        )
+
+
+    def test_ostoskorista_poistaminen_kutsuu_oikean_metodin(self):
+        self.viitegeneraattori_mock.uusi.side_effect = [1, 2, 3]
+        self.kauppa.aloita_asiointi()
+        self.kauppa.lisaa_koriin(1)
+        self.kauppa.lisaa_koriin(2)
+        self.kauppa.poista_korista(1)
+        self.varasto_mock.palauta_varastoon.assert_called()
+
