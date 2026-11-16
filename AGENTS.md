@@ -6,3 +6,9 @@
 - Browser tests are headed by default (`HEADLESS` is `false` in `src/tests/resource.robot`); use `uv run robot -v HEADLESS:true src/tests` where no visible browser is available.
 - The login app stores users in a process-local in-memory repository, not a database. Its Robot setup resets that state through `/tests/reset`; changes to test isolation or persistence should account for that shared singleton.
 - Registration username/password validation happens in `src/services/user_service.py`, in `UserService.validate`; login credential checks are in `UserService.check_credentials` in the same file.
+
+## `viikko4/tdd-ostoskori`
+
+- Run tests from this exercise directory with `uv run pytest` (pytest discovers `src/tests/ostoskori_test.py`). The project uses Python 3.14 and declares pytest as a dev dependency.
+- Keep changes to `src/ostoskori.py`; do not modify `src/ostos.py` or `src/tuote.py`.
+- Do not edit tests unless explicitly asked. Implement only the minimal code needed to make them pass.
