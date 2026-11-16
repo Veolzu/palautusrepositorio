@@ -64,4 +64,7 @@ class TestOstoskori(unittest.TestCase):
         self.kori.lisaa_tuote(maito)
         self.kori.lisaa_tuote(maito)
 
-        self.assertEqual(len(self.kori.ostokset()), 1)
+        ostokset = self.kori.ostokset()
+        self.assertEqual(len(ostokset), 1)
+        self.assertEqual(ostokset[0].tuotteen_nimi(), maito.nimi())
+        self.assertEqual(ostokset[0].lukumaara(), 2)
