@@ -2,10 +2,10 @@ from tuote import Tuote
 
 class Ostoskori:
     def __init__(self):
-        pass
+        self._ostokset = []
 
     def tavaroita_korissa(self):
-        pass
+        return len(self._ostokset)
 
     def hinta(self):
         return 0
