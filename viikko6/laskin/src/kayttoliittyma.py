@@ -9,10 +9,12 @@ class Komento(Enum):
     KUMOA = 4
 
 
+
 class Kayttoliittyma:
     def __init__(self, sovelluslogiikka, root):
         self._sovelluslogiikka = sovelluslogiikka
         self._root = root
+        self._commandhistory = []
 
     def kaynnista(self):
         self._arvo_var = StringVar()
@@ -56,20 +58,22 @@ class Kayttoliittyma:
 
     def _suorita_komento(self, komento):
         arvo = 0
-
+        
         try:
             arvo = int(self._syote_kentta.get())
         except Exception:
             pass
+        komennot = {
+            Komento.SUMMA: lambda : self._sovelluslogiikka.plus(arvo),
+            Komento.EROTUS: lambda: self._sovelluslogiikka.miinus(arvo),
+            Komento.NOLLAUS: lambda: self._sovelluslogiikka.nollaa(),
+            Komento.KUMOA: lambda : self._sovelluslogiikka.aseta_arvo(self._commandhistory.pop()) if len(self._commandhistory) > 0 else 0
+        }
+        if komento != Komento.KUMOA:
+            self._commandhistory.append(self._sovelluslogiikka.arvo())
 
-        if komento == Komento.SUMMA:
-            self._sovelluslogiikka.plus(arvo)
-        elif komento == Komento.EROTUS:
-            self._sovelluslogiikka.miinus(arvo)
-        elif komento == Komento.NOLLAUS:
-            self._sovelluslogiikka.nollaa()
-        elif komento == Komento.KUMOA:
-            pass
+        if komento in komennot:
+            komennot[komento]()
 
         self._kumoa_painike["state"] = constants.NORMAL
 
@@ -77,6 +81,5 @@ class Kayttoliittyma:
             self._nollaus_painike["state"] = constants.DISABLED
         else:
             self._nollaus_painike["state"] = constants.NORMAL
-
         self._syote_kentta.delete(0, constants.END)
         self._arvo_var.set(self._sovelluslogiikka.arvo())
