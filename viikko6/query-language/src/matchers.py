@@ -93,10 +93,14 @@ class QueryBuilder:
             alternatives = [query.build() for query in queries]
             return And(current_query, Or(*alternatives))
 
-            
         return QueryBuilder(build_or_queries)
 
-        
+    def not_(self, matcher):
+        def build_not_query():
+            query = self._build_query()
+            return And(query, Not(matcher))
+
+        return QueryBuilder(build_not_query)
 
 
     def build(self):
